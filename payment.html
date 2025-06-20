@@ -380,11 +380,12 @@ const downloadURL = await cloudinaryUpload(screenshotFile);
     sendBuyerEmail(paymentData);
     handlePaymentSuccess();
 
-    await fetch('https://script.google.com/macros/s/AKfycbz-ojRLbqkCUFrFK0qe9bJOMHPZnTYuf_djXUlrzRy7Y1dsitmB0HMItgbIBfkS3LGd/exec', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(paymentData)
-    });
+  await fetch('https://script.google.com/macros/s/AKfycbz-ojRLbqkCUFrFK0qe9bJOMHPZnTYuf_djXUlrzRy7Y1dsitmB0HMItgbIBfkS3LGd/exec', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(paymentData)
+});
+
 
     // ✅ Show success
     document.querySelector(".pay-btn-modern").style.display = "none";
