@@ -185,7 +185,15 @@ document.getElementById('trayLogoutBtn')?.addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', function () {
   const tray = document.getElementById('mobileTray');
   const closeTrayBtn = document.getElementById('closeTrayBtn');
-  const trayCartBtn = document.getElementById('trayCartBtn');
+// ...existing code...
+const trayCartBtn = document.getElementById('trayCartBtn');
+// Cart button
+if (trayCartBtn) {
+  trayCartBtn.onclick = function () {
+    window.location.href = 'cart.html';
+  };
+}
+// ...existing code...
   const trayAdminBtn = document.getElementById('trayAdminBtn');
   const trayLoginBtn = document.getElementById('trayLoginBtn');
   const trayLogoutBtn = document.getElementById('trayLogoutBtn');
@@ -204,6 +212,7 @@ document.addEventListener('DOMContentLoaded', function () {
   trayCartBtn.onclick = function () {
     window.location.href = 'cart.html';
   };
+  
 
   // Admin button
   trayAdminBtn.onclick = function () {
