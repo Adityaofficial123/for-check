@@ -62,6 +62,8 @@ body {
   .pay-btn:hover {
     background-color: #218838;
   }
+
+  
   
   @media (max-width: 768px) {
     .product-details {
@@ -168,6 +170,23 @@ body {
   text-align: center;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 @keyframes zoomIn {
   from { transform: scale(0.95); opacity: 0; }
@@ -218,25 +237,28 @@ body {
     
   /* Modern Pay Button */
 .pay-btn-modern {
-  padding: 15px 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   background: linear-gradient(135deg, #00b894, #00cec9);
   color: white;
-  font-size: 1.1rem;
-  font-weight: 600;
+  padding: 14px 22px;
   border: none;
   border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .pay-btn-modern:hover {
   background: linear-gradient(135deg, #00a383, #00b9b2);
-  transform: scale(1.05);
+  transform: translateY(-2px);
 }
+
 
 /* Modern Popup */
 .qr-popup-modern {
@@ -343,6 +365,26 @@ body {
 .send-id-btn:hover {
   background: #0056b3;
 }
+
+/* Ensure buttons in payment-section are spaced and responsive */
+.payment-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+  align-items: center;
+}
+@media (min-width: 1000px) {
+  .upi-proof-box {
+    display: none;
+  }
+}
+@media (max-width: 1001px) {
+  .pay-btn-modern:not(.mobile-only) {
+    display: none;
+  }
+}
+
 .payment-id-section {
   display: flex;
   flex-direction: column;
@@ -789,13 +831,26 @@ textarea#userReview {
 .pay-btn-modern {
   display: inline-flex;
   align-items: center;
-  background: #4CAF50;
-  padding: 10px 20px;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #00b894, #00cec9);
   color: white;
+  padding: 14px 22px;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
+
+.pay-btn-modern:hover {
+  background: linear-gradient(135deg, #00a383, #00b9b2);
+  transform: translateY(-2px);
+}
+
 /* Hide on desktop (screen width ≥ 1025px) */
 .mobile-only {
   display: none;
