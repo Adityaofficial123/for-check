@@ -7,7 +7,9 @@
 
   <!-- ✅ Custom CSS -->
   <link rel="stylesheet" href="style2.css" />
-
+<!-- ...existing code... -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<!-- ...existing code... -->
   <!-- ✅ Font Awesome (no integrity issue) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
 
@@ -183,42 +185,39 @@ emailjs.init("wVTxCgXP-mcJn5IP4");
 
 <!-- 🎉 Confetti Effect -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
 <script>
-  function handlePaymentSuccess() {
-    const sound = document.getElementById("successSound");
-
-    // ✅ Play success sound
-    if (sound) {
-      sound.muted = false;
-      sound.volume = 1.0;
-      sound.play().catch(err => {
-        console.warn("🔇 Autoplay blocked. Will retry on user interaction.");
-      });
-    }
 function handlePaymentSuccess() {
+  // ✅ Close QR popup
+  document.getElementById("qrPopup").style.display = "none";
+
+  // ✅ Show success animation
   document.getElementById("successPopup").style.display = "flex";
-  handlePaymentSuccess();
-}
 
-    // 🎉 Launch confetti
-    confetti({
-      particleCount: 150,
-      spread: 70,
-      origin: { y: 0.6 }
+  // ✅ Play sound
+  const sound = document.getElementById("successSound");
+  if (sound) {
+    sound.muted = false;
+    sound.volume = 1.0;
+    sound.play().catch(err => {
+      console.warn("🔇 Autoplay blocked.");
     });
-
-    // ✅ Show alert popup after short delay
-    setTimeout(() => {
-      alert("🎉 Payment Successful!");
-    }, 500);
   }
 
-  // 🟢 Example usage: Call this function after successful payment
-  // handlePaymentSuccess();
+  // 🎉 Confetti
+  confetti({
+    particleCount: 150,
+    spread: 70,
+    origin: { y: 0.6 }
+  });
+
+  // 🟢 Optional alert (or remove if not needed)
+  setTimeout(() => {
+    alert("🎉 Payment Successful!");
+    // Optionally hide the popup after a delay:
+    document.getElementById("successPopup").style.display = "none";
+  }, 1500);
+}
 </script>
-
-
 <!-- Firebase & Logic -->
 <script type="module">
   
@@ -322,18 +321,15 @@ window.closePaymentPopup = () => {
 
 // ✅ Send UPI Payment ID & Screenshot to Firebase
 window.sendPaymentId = async function () {
-  
- const enteredId = document.getElementById("popupPaymentId").value.trim();
-const screenshotInput = document.getElementById("popupPaymentScreenshot"); // 🔁 updated ID
-const screenshotFile = screenshotInput.files[0];
-
+  const enteredId = document.getElementById("popupPaymentId").value.trim();
+  const screenshotInput = document.getElementById("popupPaymentScreenshot");
+  const screenshotFile = screenshotInput.files[0];
   const sendButton = document.querySelector(".send-id-btn");
 
-if (!enteredId || !screenshotFile || !screenshotFile.type.startsWith("image/")) {
-  alert("❌ Please enter UPI Reference ID and upload a valid payment screenshot.");
-  return;
-}
-
+  if (!enteredId || !screenshotFile || !screenshotFile.type.startsWith("image/")) {
+    alert("❌ Please enter UPI Reference ID and upload a valid payment screenshot.");
+    return;
+  }
 
   const user = auth.currentUser;
   if (!user) {
@@ -348,17 +344,11 @@ if (!enteredId || !screenshotFile || !screenshotFile.type.startsWith("image/")) 
   }
 
   const customPayId = 'pay_' + Date.now();
+  const downloadURL = await cloudinaryUpload(screenshotFile);
 
-  // ✅ Upload screenshot to Firebase Storage
-
-const downloadURL = await cloudinaryUpload(screenshotFile);
-
-  
   try {
     sendButton.disabled = true;
     sendButton.textContent = "Uploading Proof...";
-
-
 
     const paymentData = {
       userId: user.uid,
@@ -376,18 +366,11 @@ const downloadURL = await cloudinaryUpload(screenshotFile);
 
     console.log("🔥 Submitting payment data:", paymentData);
 
-    await set(ref(db, 'payments/' + customPayId), paymentData);
-    sendBuyerEmail(paymentData);
+    await set(ref(db, 'payments/' + customPayId), paymentData); // ✅ Only Firebase now
+    sendBuyerEmail(paymentData); // ⬅️ You’re still emailing the buyer (emailJS)
     handlePaymentSuccess();
 
-  await fetch('https://script.google.com/macros/s/AKfycbz-ojRLbqkCUFrFK0qe9bJOMHPZnTYuf_djXUlrzRy7Y1dsitmB0HMItgbIBfkS3LGd/exec', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(paymentData)
-});
-
-
-    // ✅ Show success
+    // Success UI changes
     document.querySelector(".pay-btn-modern").style.display = "none";
     const paymentSection = document.querySelector(".payment-section");
     const successMessage = document.createElement("p");
@@ -395,9 +378,6 @@ const downloadURL = await cloudinaryUpload(screenshotFile);
     successMessage.style.color = "green";
     successMessage.style.fontWeight = "bold";
     paymentSection.appendChild(successMessage);
-handlePaymentSuccess();
-
-
   } catch (err) {
     console.error("❌ Error:", err);
     alert("❌ Payment failed. Try again.");
